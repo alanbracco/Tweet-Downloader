@@ -1,0 +1,5 @@
+./*.json
+./*.txt
+./*.byte
+keys.sh
+scrap.py
