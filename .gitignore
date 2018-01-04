@@ -1,5 +1,5 @@
-./*.json
-./*.txt
-./*.byte
+*.json
+*.txt
+*.byte
 keys.sh
 scrap.py
