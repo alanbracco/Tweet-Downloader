@@ -8,6 +8,7 @@ Options:
   -l <n>            Stream at most <n> tweets.
   -o <filename>     Output tweets to file.
   -m <n>            Save to several files, <n> tweets per file.
+  -s                Only short texts
   -h --help         Show this screen.
 """
 from docopt import docopt
@@ -29,13 +30,15 @@ def progress(msg, width=None):
 
 class MyStreamListener(tweepy.StreamListener):
 
-    def __init__(self, output=None, limit=None, limit_per_file=None):
+    def __init__(self, output=None, limit=None,
+                 limit_per_file=None, only_short=False):
         self.tweets = []
         self.output = output
         self.limit = limit or float('inf')
         self.limit_per_file = limit_per_file or float('inf')
         self.count = 0
         self.count_per_file = 0
+        self.only_short = only_short
         if output:
             self.file_count = 0
             if limit_per_file:
@@ -46,6 +49,9 @@ class MyStreamListener(tweepy.StreamListener):
     def on_status(self, status):
 
         if hasattr(status, "retweeted_status"):
+            return True
+
+        if self.only_short and status.truncated:
             return True
 
         has_attrs = (hasattr(status, "place") and 
@@ -99,6 +105,7 @@ if __name__ == '__main__':
         'output': opts['-o'],
         'limit': opts['-l'] and int(opts['-l']),
         'limit_per_file': opts['-m'] and int(opts['-m']),
+        'only_short': opts['-s'],
     }
     streamListener = MyStreamListener(**args)
     stream = tweepy.Stream(auth=api.auth, listener=streamListener)
