@@ -7,3 +7,10 @@ pornoco
 plis
 944696983742308352 va?
 acento argentino...habla o hablá
+atr
+ok
+lxs juntxs
+sj san juan?
+wtf
+duerme eee --> duerme o duerme eh
+poner palabras juntas separadas por _ ?? ver que pasa al tokenizar email
