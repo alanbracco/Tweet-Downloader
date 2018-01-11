@@ -6,3 +6,5 @@ Nombres van en mayúscula
 
 Corregir solo palabras mal escritas. Si están mal semánticamente no hay problema
 si se refiere a madre y dice mama en vez de mamá no importa
+
+ver tildes invertidos è
