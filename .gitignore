@@ -3,3 +3,5 @@
 *.byte
 keys.sh
 scrap.py
+Corpus/Parts
+*.pdf
