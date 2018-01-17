@@ -30,12 +30,20 @@ AUTH_DATA = [
 ]
 
 
+def progress(msg, width=None):
+    """Ouput the progress of something on the same line."""
+    if not width:
+        width = len(msg)
+    print('\b' * width + msg, end='')
+    sys.stdout.flush()
+
+
 if __name__ == '__main__':
     opts = docopt(__doc__)
 
     input_file = opts['-i']
     output_file = opts['-o']
-    if input_file and output_file:
+    if input_file:
         if not os.path.exists(input_file):
             sys.exit("File does not exist")
         with open(input_file, 'r') as in_file:
@@ -51,16 +59,33 @@ if __name__ == '__main__':
                              wait_on_rate_limit=True,
                              wait_on_rate_limit_notify=True)
 
+            ids = []
             tweets = []
+            not_found_ids = []
+
             for line in in_file.readlines():
                 if '\t' in line:
                     id, _ = line.split('\t')
-                    try:
-                        tweet = api.get_status(id=id, tweet_mode='extended')
-                        tweets.append(tweet)
-                    except Exception:
-                        print('Tweet with id {id} not found.'.format(id=id))
+                    ids.append(id)
 
-            if len(tweets) > 0:
+            count = 1
+            for id in ids:
+                size = 100
+                x = int((float(count)/len(ids))*size)
+                perc = round((float(count)/len(ids))*100, 1)
+                msg = ("Checking tweets..." +
+                       "{}% ({}/{})".format(perc, count, len(ids)) +
+                       ' '*(len(str(len(ids))) + 6 - (len(str(perc))+len(str(count)))) +
+                       '[' + '#'*x + ' '*(size-x) + ']')
+                progress(msg)
+                try:
+                    tweet = api.get_status(id=id, tweet_mode='extended')
+                    tweets.append(tweet)
+                except Exception:
+                    not_found_ids.append(id)
+                count += 1
+            print(len(not_found_ids), "tweets not found.")
+
+            if output_file and len(tweets) > 0:
                 with open(output_file, 'wb') as out_file:
-                    pickle.dump(tweets, out_file) 
+                    pickle.dump(tweets, out_file)
