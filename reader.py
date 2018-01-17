@@ -74,9 +74,10 @@ if __name__ == '__main__':
                 json.dump(jsons, json_file, sort_keys=True, indent=4,
                           separators=(',', ': '))
                 json_file.close()
+                print("JSON CREATED")
 
             twnorm_file.close()
-            print("JSON and TXT CREATED")
+            print("TXT CREATED")
 
         except Exception as e:
             if extension == 'byte':
